@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const config = {
     entry: [
         'react-hot-loader/patch',
@@ -14,7 +14,7 @@ const config = {
         new HtmlWebpackPlugin({
             template: path.join(__dirname, './Client/index.html'),
         }),
-        new MiniCssExtractPlugin(),
+
     ],
     resolve: {
         extensions: ['.jsx', '.js'],
@@ -23,14 +23,19 @@ const config = {
         rules: [
             {
                 test: /\.(js|jsx)$/,
-                use: 'babel-loader',
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env', '@babel/preset-react'],
+                        plugins: [],
+                    },
+                },
                 exclude: /node_modules/
             },
             {
                 test: /\.s[ac]ss$/i,
                 exclude: /node_modules/,
                 use: [
-                    MiniCssExtractPlugin.loader,
                     'style-loader',
                     'css-loader',
                     'sass-loader',
