@@ -39,9 +39,9 @@ photoControllers.getPhotosByTag = async (req, res, next) => {
 photoControllers.postPhoto = async (req, res, next) => {
   const { userId } = req.params;
   const { takenAt, tags, url, comments } = req.body;
-  // insert string goes here
+  const queryString = `INSERT INTO photos (url, userId, takenAt, tags, comments) VALUES ($1, $2, $3, $4, $5)`;
   try {
-      // query to post photo
+      await db.query(queryString, [url, userId, takenAt, tags, comments]);
       return next();
   } catch (err) {
     return next({
@@ -74,7 +74,7 @@ photoControllers.deletePhoto = async (req, res, next) => {
   const { photoId } = req.query;
   const queryString = `DELETE * FROM photos WHERE userId=($1) AND id=($2)`
   try {
-      const deletePhoto = await db.query(queryString, [userId, photoId]);
+      await db.query(queryString, [userId, photoId]);
       res.locals.deletePhoto = deletePhoto;
       return next();
   } catch (err) {
@@ -85,18 +85,13 @@ photoControllers.deletePhoto = async (req, res, next) => {
   }
 };
 
-// SQL updating syntax
-// UPDATE table_name
-// SET column1 = value1, column2 = value2, ...
-// WHERE condition;
-
 // updating a photo by id
 photoControllers.updatePhoto = async (req, res, next) => {
   const { userId } = req.params;
   const { photoId } = req.query;
-  const queryString = `UPDATE photos SET `;
+  const queryString = `UPDATE photos SET column1=value1, column2=value2, ... WHERE userId=($1) AND id=($2)`;
   try {
-      // update query
+      await db.query(queryString, [userId, photoId]);
       return next();
   } catch (err) {
     return next({
