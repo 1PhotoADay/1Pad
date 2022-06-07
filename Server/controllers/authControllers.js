@@ -35,17 +35,8 @@ authControllers.login = async (req, res, next) => {
     const pass = `SELECT password from users WHERE username = ($1)`;
     let VALUES = [username];
     const { rows } = await db.query(pass, VALUES);
-    // const response = await passwordQuery;
     const savedPassword = rows[0].password;
     const isMatch = await comparePassword(password, savedPassword, next);
-    // if (password === response) {
-    //   const id = `SELECT id from users WHERE username = ($1)`;
-    //   VALUES = username;
-    //   const idQuery = await db.query(id, VALUES);
-    //   const userId = await idQuery;
-    //   res.locals.userId = userId;
-    //   res.json(userId);
-    // }
     console.log('isMatch', isMatch);
     if (isMatch) {
       const id = `SELECT id from users WHERE username = ($1)`;

@@ -9,6 +9,7 @@ app.use(express.json());
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
 app.use('/api/auth', authRouters);
+app.use('/api', photoRouters);
 
 // Global route handler
 app.use('*', (req, res) => {
