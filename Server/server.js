@@ -1,16 +1,16 @@
 const express = require('express');
 const path = require('path');
 const authRouters = require('./routers/authRouters');
-// const photoRouters = require('./routes/photoRouters');
+const photoRouters = require('./routers/photoRouters');
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = 3000;
 
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
+app.use('/api', photoRouters);
 app.use('/api/auth', authRouters);
-// app.use('/api', photoRouters);
 
 // Global route handler
 app.use('*', (req, res) => {
