@@ -21,6 +21,7 @@ photoControllers.getAllUserPhotos = async (req, res, next) => {
 // get photos by userId and tag
 photoControllers.getPhotosByTag = async (req, res, next) => {
   const { userId } = req.params;
+
   const { tags } = req.query;
   console.log(tags);
   const queryString = `SELECT * FROM photos WHERE userid=($1) AND tags LIKE ($2)`;
@@ -31,7 +32,7 @@ photoControllers.getPhotosByTag = async (req, res, next) => {
   } catch (err) {
     return next({
       log: 'Error occurred getting tagged photos. Try again',
-      message: { err: 'Error querying database for photos by tag.' },
+      message: { err: 'Error querying photos by userId and tags.' },
     });
   }
 };

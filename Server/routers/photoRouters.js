@@ -19,7 +19,6 @@ router.get('/:userId/tags', photoControllers.getPhotosByTag, (req, res) => {
   res.status(200).json(res.locals.taggedPhotos);
 });
 
-// all of a user's photos
 router.get('/:userId', photoControllers.getAllUserPhotos, (req, res) => {
   res.status(200).json(res.locals.allPhotos);
 });
