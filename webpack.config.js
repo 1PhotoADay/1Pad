@@ -2,7 +2,8 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const config = {
-  entry: ['react-hot-loader/patch', './Client/index.js'],
+  mode: process.env.NODE_ENV,
+  entry: './Client/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -45,7 +46,6 @@ const config = {
     },
     compress: true,
     port: 8080,
-    hot: true,
     historyApiFallback: true,
     proxy: {
       '/api': {

@@ -4,12 +4,11 @@ const photoControllers = {};
 
 // get all of a user's photos
 photoControllers.getAllUserPhotos = async (req, res, next) => {
-
   const { userId } = req.params;
-  const queryString = `SELECT * FROM photos WHERE userId = ($1)`;
+  const queryString = `SELECT * FROM photos WHERE userid = ($1)`;
   try {
     const allPhotos = await db.query(queryString, [userId]);
-    res.locals.allPhotos = allPhotos;
+    res.locals.allPhotos = allPhotos.rows;
     return next();
   } catch (err) {
     return next({
@@ -17,7 +16,6 @@ photoControllers.getAllUserPhotos = async (req, res, next) => {
       message: { err: 'Error querying database for photos.' },
     });
   }
-
 };
 
 // get photos by userId and tag
@@ -25,10 +23,11 @@ photoControllers.getPhotosByTag = async (req, res, next) => {
   const { userId } = req.params;
 
   const { tags } = req.query;
-  const queryString = `SELECT * FROM photos WHERE userId=($1) AND tags LIKE ($2)`;
+  console.log(tags);
+  const queryString = `SELECT * FROM photos WHERE userid=($1) AND tags LIKE ($2)`;
   try {
     const taggedPhotos = await db.query(queryString, [userId, `%${tags}%`]);
-    res.locals.taggedPhotos = taggedPhotos;
+    res.locals.taggedPhotos = taggedPhotos.rows;
     return next();
   } catch (err) {
     return next({
@@ -40,14 +39,14 @@ photoControllers.getPhotosByTag = async (req, res, next) => {
 
 // posting a photo
 photoControllers.postPhoto = async (req, res, next) => {
-  const { userId } = req.params;
+  let { userId } = req.params;
   const { takenAt, tags, url, comments } = req.body;
-  const queryString = `INSERT INTO photos (url, userId, takenAt, tags, comments) VALUES ($1, $2, $3, $4, $5)`;
-  try {
+  userId = parseInt(userId);
 
+  const queryString = `INSERT INTO photos (url, userid, takenat, tags, comments) VALUES ($1, $2, $3, $4, $5)`;
+  try {
     await db.query(queryString, [url, userId, takenAt, tags, comments]);
     return next();
-
   } catch (err) {
     return next({
       log: 'Error occurred posting a photo. Try again',
@@ -56,16 +55,18 @@ photoControllers.postPhoto = async (req, res, next) => {
   }
 };
 
-
 // getting a photo by id
 photoControllers.getPhotoById = async (req, res, next) => {
-  const { userId } = req.params;
-  const { photoId } = req.query;
-  const queryString = `SELECT * FROM photos WHERE userId=($1) AND id=($2)`
+  let { userId } = req.params;
+  let { photoId } = req.query;
+  userId = parseInt(userId);
+  photoId = parseInt(photoId);
+  console.log(userId, photoId);
+  const queryString = `SELECT * FROM photos WHERE userid=($1) AND id=($2)`;
   try {
-      const photo = await db.query(queryString, [userId, photoId]);
-      res.locals.photo = photo;
-      return next();
+    const photo = await db.query(queryString, [userId, photoId]);
+    res.locals.photo = photo.rows;
+    return next();
   } catch (err) {
     return next({
       log: 'Error occurred getting a photo by id. Try again',
@@ -76,13 +77,14 @@ photoControllers.getPhotoById = async (req, res, next) => {
 
 // deleting a photo by id
 photoControllers.deletePhoto = async (req, res, next) => {
-  const { userId } = req.params;
-  const { photoId } = req.query;
-  const queryString = `DELETE * FROM photos WHERE userId=($1) AND id=($2)`
+  let { userId } = req.params;
+  let { photoId } = req.query;
+  [userId, photoId] = [parseInt(userId), parseInt(photoId)];
+  // console.log(photoId);
+  const queryString = `DELETE FROM photos WHERE userid=($1) AND id=($2)`;
   try {
-      await db.query(queryString, [userId, photoId]);
-      res.locals.deletePhoto = deletePhoto;
-      return next();
+    await db.query(queryString, [userId, photoId]);
+    return next();
   } catch (err) {
     return next({
       log: 'Error occurred deleting a photo. Try again',
@@ -95,10 +97,18 @@ photoControllers.deletePhoto = async (req, res, next) => {
 photoControllers.updatePhoto = async (req, res, next) => {
   const { userId } = req.params;
   const { photoId } = req.query;
-  const queryString = `UPDATE photos SET column1=value1, column2=value2, ... WHERE userId=($1) AND id=($2)`;
+  const { takenAt, tags, url, comments } = req.body;
+  const queryString = `UPDATE photos SET url=($1), takenat=($2), tags=($3), comments=($4) WHERE userid=($5) AND id=($6)`;
   try {
-      await db.query(queryString, [userId, photoId]);
-      return next();
+    await db.query(queryString, [
+      url,
+      takenAt,
+      tags,
+      comments,
+      userId,
+      photoId,
+    ]);
+    return next();
   } catch (err) {
     return next({
       log: 'Error occurred updating a photo. Try again',
@@ -106,6 +116,5 @@ photoControllers.updatePhoto = async (req, res, next) => {
     });
   }
 };
-
 
 module.exports = photoControllers;
