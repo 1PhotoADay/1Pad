@@ -17,11 +17,6 @@ photoControllers.getAllUserPhotos = async (req, res, next) => {
     }
 }
 
-const getChar = (`SELECT p.*, s.name AS species, l.name AS homeworld 
-FROM people p
-  JOIN species s ON p.species_id = s._id 
-  JOIN planets l ON p.homeworld_id = l._id`);
-
 photoControllers.getPhotosByTag = async (req, res, next) => {
   const { userId } = req.params;
   const { tag } = req.query;
