@@ -14,4 +14,16 @@ hash.hashPassword = async (password, next) => {
   }
 };
 
+hash.comparePassword = async (password, savedPassword, next) => {
+  try {
+    const isMatch = await bcrypt.compare(password, savedPassword);
+    return isMatch;
+  } catch (err) {
+    return next({
+      log: 'Error occurred with signup. Try again',
+      message: { err: 'Wrong username or password' },
+    });
+  }
+};
+
 module.exports = hash;
