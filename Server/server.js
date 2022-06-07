@@ -1,7 +1,9 @@
 const express = require('express');
 const path = require('path');
 const authRouters = require('./routers/authRouters');
+
 // const photoRouters = require('./routes/photoRouters');
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
