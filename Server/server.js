@@ -1,12 +1,14 @@
 const express = require('express');
 const path = require('path');
+const authRouters = require('./routers/authRouters');
+
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
-app.use('/api/auth', authRouter);
+app.use('/api/auth', authRouters);
 
 // Global route handler
 app.use('*', (req, res) => {
