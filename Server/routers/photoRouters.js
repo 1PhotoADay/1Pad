@@ -13,5 +13,10 @@ router.get('/:userId', photoControllers.getAllUserPhotos, (req, res) => {
     res.status(200).json(res.locals.allPhotos);
 });
 
+// post photo
+router.post('/', photoControllers.postPhoto, (req, res) => {
+    res.sendStatus(200);
+});
+
 
 module.exports = router;
