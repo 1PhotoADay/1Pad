@@ -7,9 +7,15 @@ const db = require('../models');
 router.post('/signup', async (req, res, next) => {
   const { username, password } = req.body;
   const hashedPassword = await hashPassword(password, next);
-  const queryString = `INSERT INTO users (username, password) VALUES ($1), ($2) RETURNING id`;
+  const queryString = `SELECT username FROM users WHERE username=($1)`;
+  const insertString = `INSERT INTO users (username, password) VALUES ($1), ($2) RETURNING id`;
   try {
-    await db.query(queryString, [username, hashedPassword]);
+    const userExists = await db.query(queryString, [username]);
+    if (userExists.rowCount === 0) {
+      const { id } = await db.query(insertString, [username, hashedPassword]);
+      res.locals.userId = id;
+      next();
+    }
   } catch (err) {
     return next({
       log: 'Error occurred with signup. Try again',
