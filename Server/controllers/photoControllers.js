@@ -111,7 +111,7 @@ photoControllers.updatePhoto = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'Error occurred updating a photo. Try again',
+      log: `Error occurred updating a photo. Try again. ${err.message}`,
       message: { err: 'Error updating a photo by userId and photoId.' },
     });
   }

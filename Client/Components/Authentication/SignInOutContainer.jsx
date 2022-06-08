@@ -7,6 +7,8 @@ import Box from '@material-ui/core/Box';
 import Login from './Login.jsx';
 import Signup from './Signup.jsx';
 import MainContainer from '../Main/MainContainer.jsx';
+import { Link } from 'react-router-dom';
+import GoogleOAuth from './GoogleOAuth.jsx';
 
 const SignInOutContainer = ({ setAccount, setToken }) => {
   const [userId, setUserId] = useState();

@@ -19,7 +19,7 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.js$|jsx/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -31,7 +31,7 @@ const config = {
       },
       {
         test: /\.s[ac]ss$/i,
-        exclude: /node_modules/,
+        // exclude: /node_modules/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {

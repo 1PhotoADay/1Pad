@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import BottomNav from './Components/Main/BottomNav';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './index.css';
 import SignInOutContainer from './Components/Authentication/SignInOutContainer.jsx';
+import Landing from './Components/Main/Landing';
+import MainLayoutRoutes from './MainLayoutRoutes';
 
 function App() {
-
   return (
-    <div className='App'>
-      <h1>Hello World</h1>
-      <SignInOutContainer />
-                <BottomNav />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Landing />} />
+        <Route path='/login' element={<SignInOutContainer />} />
+        <Route path='*' element={<MainLayoutRoutes />} />
+      </Routes>
+    </BrowserRouter>
   );
-
 }
 
 export default App;
