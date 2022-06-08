@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import MainContainer from '../Main/MainContainer.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GoogleOAuth from './GoogleOAuth.jsx';
 import styled from 'styled-components';
 
@@ -19,6 +19,7 @@ const StyledGoogle = styled(GoogleOAuth)`
 `;
 
 export default function Login({ setShowMain, setUserId }) {
+  const navigate = useNavigate();
   // Styling of paper and button for the login screen
   const paperStyle = { padding: 20, height: 500, width: 300, margin: '0 auto' };
   const headerStyle = { margin: 0 };
@@ -56,13 +57,14 @@ export default function Login({ setShowMain, setUserId }) {
       .then((response) => response.json())
       .then((data) => {
         console.log('Successful login:', data);
-        if (data.isLoggedIn) {
-          setIsLoggedIn(true);
-          setShowMain(true);
-          setUserId(data.userId);
-          localStorage.setItem('userId', data.userId);
-          console.log('User ID check', data.userId);
-        }
+        // if (data.isLoggedIn) {
+        setIsLoggedIn(true);
+        setShowMain(true);
+        setUserId(data.userId);
+        localStorage.setItem('userId', data);
+        console.log('User ID check', data);
+        navigate('/dashboard');
+        // }
       })
       .catch((error) => {
         console.log('Error: ', error);

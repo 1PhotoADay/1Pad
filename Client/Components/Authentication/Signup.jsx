@@ -3,13 +3,14 @@ import { Grid, Paper, Avatar, TextField, Button } from '@material-ui/core';
 import MainContainer from '../Main/MainContainer.jsx';
 import GoogleOAuth from './GoogleOAuth.jsx';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const StyledGoogle = styled(GoogleOAuth)`
   margin-top: 1rem;
 `;
 
 const Signup = ({ setUserId, setShowMain }) => {
+  const navigate = useNavigate();
   //styling of the apps and button
   const paperStyle = { padding: 20, height: 500, width: 300, margin: '0 auto' };
   const headerStyle = { margin: 0 };
@@ -36,12 +37,13 @@ const Signup = ({ setUserId, setShowMain }) => {
       .then((response) => response.json())
       .then((data) => {
         console.log('Successful login:', data);
-        if (data.isLoggedIn) {
-          setIsLoggedIn(true);
-          setShowMain(true);
-          setUserId(data.userId);
-          console.log('User ID check', data.userId);
-        }
+        // if (data.isLoggedIn) {
+        setIsLoggedIn(true);
+        setShowMain(true);
+        setUserId(data);
+        console.log('User ID check', data);
+        navigate('/dashboard');
+        // }
       })
       .catch((error) => {
         console.log('Error: ', error);

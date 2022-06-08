@@ -1,7 +1,7 @@
 import S3FileUpload from 'react-s3';
 
 const config = {
-  bucketName: '1PadBucket',
+  bucketName: '1pad',
   region: 'us-east-1',
   accessKeyId: 'AKIA5UXFKCNE25GGXBRI',
   secretAccessKey: `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`,
