@@ -8,11 +8,26 @@ import {
   Typography,
 } from '@material-ui/core';
 import MainContainer from '../Main/MainContainer.jsx';
+import { Link } from 'react-router-dom';
+import GoogleOAuth from './GoogleOAuth.jsx';
+import styled from 'styled-components';
+
+const StyledGoogle = styled(GoogleOAuth)`
+  width: 700,
+  height: 800,
+  margin-top: 1rem;
+`;
 
 export default function Login({ setShowMain, setUserId }) {
   // Styling of paper and button for the login screen
   const paperStyle = { padding: 20, height: 500, width: 300, margin: '0 auto' };
-  const btnstyle = { margin: '10px 0' };
+  const headerStyle = { margin: 0 };
+  const btnstyle = {
+    margin: '10px 0',
+    marginBottom: '1rem',
+    marginTop: '1rem',
+  };
+  const avatarStyle = { backgroundColor: 'primary' };
 
   // local state to capture the Username and Password
   const [Username, setUserName] = useState();
@@ -31,7 +46,7 @@ export default function Login({ setShowMain, setUserId }) {
     console.log('body', body);
 
     // POST request to the server with the user information and password
-    fetch('api/users/login', {
+    fetch('api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,6 +60,7 @@ export default function Login({ setShowMain, setUserId }) {
           setIsLoggedIn(true);
           setShowMain(true);
           setUserId(data.userId);
+          localStorage.setItem('userId', data.userId);
           console.log('User ID check', data.userId);
         }
       })
@@ -61,10 +77,9 @@ export default function Login({ setShowMain, setUserId }) {
         <Grid>
           <Paper style={paperStyle}>
             <Grid align='center'>
-              <img src={icon}></img>
-              <br></br>
-              <h2>CRASH CODE</h2>
-              <h3>WELCOME!</h3>
+              <Avatar style={avatarStyle}></Avatar>
+              <h1>1Pad</h1>
+              <h2 style={headerStyle}>LOG IN</h2>
             </Grid>
             <TextField
               label='Username'
@@ -92,6 +107,16 @@ export default function Login({ setShowMain, setUserId }) {
               Log in
             </Button>
             <Typography align='center'> </Typography>
+            <Grid align='center'>
+              <StyledGoogle />
+            </Grid>
+            <br></br>
+            <br></br>
+            <Grid align='center'>
+              <Link to='/' component='button' variant='body2' underline='none'>
+                Back to Landing Page
+              </Link>
+            </Grid>
           </Paper>
         </Grid>
       )}
