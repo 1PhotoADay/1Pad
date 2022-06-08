@@ -10,10 +10,11 @@ import {
   Container,
   Box,
 } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import BottomNav from './BottomNav';
 import SignInOutContainer from '../Authentication/SignInOutContainer.jsx';
 import formatDate from '../../utils/formatDate';
+import colorGen from '../../utils/darkColorGenerator';
 // const dt = DateTime.now();
 // const date = dt.toObject();
 // {"year":2022,"month":6,"day":7,"hour":13,"minute":24,"second":52,"millisecond":358}
@@ -59,15 +60,26 @@ const images = (data) => {
           {' '}
           <ImageListItem key={i} onClick={handleClick}>
             {day.id ? (
-              <img src={day.img} loading='lazy' />
+              <img
+                src={day.img}
+                loading='lazy'
+                style={{ width: 300, height: 200 }}
+              />
             ) : (
               <Box
                 sx={{
                   width: 300,
                   height: 200,
-                  backgroundColor: 'orange',
+                  backgroundColor: colorGen(),
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
-              />
+              >
+                <IconButton size='large'>
+                  <AddCircleIcon />
+                </IconButton>
+              </Box>
             )}
             <ImageListItemBar
               sx={{
@@ -75,14 +87,6 @@ const images = (data) => {
               }}
               title={day.title}
               subtitle={day.subtitle}
-              //   actionIcon={
-              //     <IconButton
-              //       sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-              //       //   aria-label={`info about ${item.title}`}
-              //     >
-              //       <InfoIcon />
-              //     </IconButton>
-              //   }
             />
           </ImageListItem>
         </Link>
@@ -92,7 +96,6 @@ const images = (data) => {
 };
 
 function MainContainer() {
-  // let navigate = useNavigate();
   const [data, setData] = useState([]);
   const userId =
     localStorage.getItem('userId') !== null
@@ -102,7 +105,7 @@ function MainContainer() {
     fetch(`/api/${userId}`)
       .then((res) => res.json())
       .then((data) => {
-        const formattedData = formatDate(data, 30);
+        const formattedData = formatDate(data, 15);
         console.log(formattedData);
         setData(formattedData);
       });

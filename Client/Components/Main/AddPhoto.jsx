@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import S3FileUpload from 'react-s3';
-import { DateTime } from 'luxon';
 import {
   Input,
   Button,
@@ -8,6 +7,7 @@ import {
   TextField,
   Paper,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -31,11 +31,10 @@ function AddPhoto() {
   let headline = 'Add a photo 📷';
 
   if (location.state.id) {
-    headline = 'Edit photo';
+    headline = 'Edit photo 📸';
     photoId = location.state?.id;
     image = location.state?.img;
     tempImgUrl = location.state?.img;
-    // date = location.state?.date;
     s3Url = location.state?.img;
     desc = location.state?.comments;
     tags = location.state?.tags;
@@ -48,6 +47,7 @@ function AddPhoto() {
     desc,
     tags,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const userId =
     localStorage.getItem('userId') !== null
@@ -60,69 +60,70 @@ function AddPhoto() {
       tempImgUrl: URL.createObjectURL(e.target.files[0]),
     });
   }
-  function handleImageUpload() {
-    S3FileUpload.uploadFile(formState.image, config)
-      .then((data) => {
-        setFormState({ ...formState, s3Url: data.location });
-        console.log(data);
-      })
-      .catch((err) => alert(err));
-  }
 
   function handleSubmit() {
     const postUrl = `/api/${userId}`;
-    // handleImageUpload()
-    //   .then((data) =>
-    //     fetch(postUrl, {
-    //       method: 'POST',
-    //       headers: { 'Content-Type': 'application/json' },
-    //       body: JSON.stringify({
-    //         comments: formState.desc,
-    //         url: formState.s3Url,
-    //         tags: formState.tags,
-    //         takenAt: formState.date,
-    //       }),
-    //     })
-    //   )
-    fetch(postUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        comments: formState.desc,
-        url: formState.s3Url,
-        tags: formState.tags,
-        takenAt: formState.date,
-      }),
-    })
-      //   .then((data) => data.json())
-      .then((res) => navigate('/dashboard'));
+    S3FileUpload.uploadFile(formState.image, config)
+      .then((data) => {
+        setIsLoading(true);
+        setFormState({ ...formState, s3Url: data.location });
+        console.log(data);
+        return data;
+      })
+      .then((data) =>
+        fetch(postUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            comments: formState.desc,
+            url: data.location,
+            tags: formState.tags,
+            takenAt: formState.date,
+          }),
+        })
+      )
+      .then((res) => {
+        setIsLoading(false);
+        navigate('/dashboard');
+      })
+      .catch((err) => alert(err));
   }
   function handleEdit() {
     const patchUrl = `/api/${userId}/photos?photoId=${photoId}`;
     // if image has been updated
-    // if(formState.tempImgUrl !== formState.s3Url){
-    //     handleImageUpload().then(data => fetch(patchUrl, {
-    //         method: 'PATCH',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify({
-    //           comments: formState.desc,
-    //           url: formState.s3Url,
-    //           tags: formState.tags,
-    //           takenAt: formState.date,
-    //         }),
-    //       })).then((res) => navigate('/dashboard'));
-    // }
-
-    fetch(patchUrl, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        comments: formState.desc,
-        url: formState.s3Url,
-        tags: formState.tags,
-        takenAt: formState.date,
-      }),
-    }).then((res) => navigate('/dashboard'));
+    if (formState.tempImgUrl !== formState.s3Url) {
+      S3FileUpload.uploadFile(formState.image, config)
+        .then((data) => {
+          setIsLoading(true);
+          setFormState({ ...formState, s3Url: data.location });
+          console.log(data);
+          return data;
+        })
+        .then((data) =>
+          fetch(patchUrl, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              comments: formState.desc,
+              url: data.location,
+              tags: formState.tags,
+              takenAt: formState.date,
+            }),
+          })
+        )
+        .then((res) => navigate('/dashboard'));
+    } else {
+      fetch(patchUrl, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          comments: formState.desc,
+          url: formState.s3Url,
+          tags: formState.tags,
+          takenAt: formState.date,
+        }),
+      }).then((res) => navigate('/dashboard'));
+    }
   }
 
   function handleDelete() {
@@ -168,6 +169,11 @@ function AddPhoto() {
         marginBottom: 10,
       }}
     >
+      {isLoading && (
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%' }}>
+          <CircularProgress color='grey' />
+        </Box>
+      )}
       <Paper sx={{ p: 5 }} elevation={3}>
         <Typography variant='h6' mb={5}>
           {headline}
@@ -175,6 +181,7 @@ function AddPhoto() {
         {formState.tempImgUrl && (
           <Box className='addPhoto'>
             <img style={{ maxWidth: '300px' }} src={formState.tempImgUrl} />
+
             <Box
               component='div'
               sx={{ display: 'flex', justifyContent: 'flex-end' }}
