@@ -3,8 +3,8 @@ import S3FileUpload from 'react-s3';
 const config = {
   bucketName: '1pad',
   region: 'us-east-1',
-  accessKeyId: 'AKIA5UXFKCNE25GGXBRI',
-  secretAccessKey: `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`,
+  accessKeyId: 'AKIA5UXFKCNEUU7BP77B',
+  secretAccessKey: `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`,
   s3Url: 'http://1pad.s3-website-us-east-1.amazonaws.com',
 };
 
