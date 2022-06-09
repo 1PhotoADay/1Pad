@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import * as cocoSsd from '@tensorflow-models/coco-ssd';
+import * as tf from '@tensorflow/tfjs';
 import S3FileUpload from 'react-s3';
 import {
   Input,
@@ -13,6 +15,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import TagIcon from '@mui/icons-material/Tag';
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
 import config from '../S3UploadComponent';
@@ -48,12 +51,49 @@ function AddPhoto() {
     tags,
   });
   const [isLoading, setIsLoading] = useState(false);
+  /// START - tensorflow
+  const [model, setModel] = useState();
+  const [tfClasses, setTfClasses] = useState([]);
+
+  async function loadModel() {
+    try {
+      const model = await cocoSsd.load();
+      setModel(model);
+      console.log('set loaded Model');
+    } catch (err) {
+      console.log(err);
+      console.log('failed load model');
+    }
+  }
+
+  useEffect(() => {
+    setIsLoading(true);
+    tf.ready().then(() => {
+      loadModel().then(() => setIsLoading(false));
+    });
+  }, []);
+
+  async function handlePredict() {
+    const predictions = await model.detect(document.getElementById('tfImg'));
+    setTfClasses(predictions.filter((el) => el.score >= 0.8));
+  }
+
+  const handleAddSuggestion = (tag) => {
+    setFormState({ ...formState, tags: formState.tags + `#${tag}` });
+    const newTf = tfClasses.filter((el) => el.class !== tag);
+    setTfClasses(newTf);
+  };
+  const suggestions = tfClasses.map((el) => (
+    <span onClick={() => handleAddSuggestion(el.class)}>#{el.class}</span>
+  ));
+
+  // END- TENSORFLOW
 
   const userId =
     localStorage.getItem('userId') !== null
       ? localStorage.getItem('userId')
       : '12';
-  function onImageChange(e) {
+  async function onImageChange(e) {
     setFormState({
       ...formState,
       image: e.target.files[0],
@@ -63,9 +103,9 @@ function AddPhoto() {
 
   function handleSubmit() {
     const postUrl = `/api/${userId}`;
+    setIsLoading(true);
     S3FileUpload.uploadFile(formState.image, config)
       .then((data) => {
-        setIsLoading(true);
         setFormState({ ...formState, s3Url: data.location });
         console.log(data);
         return data;
@@ -92,9 +132,9 @@ function AddPhoto() {
     const patchUrl = `/api/${userId}/photos?photoId=${photoId}`;
     // if image has been updated
     if (formState.tempImgUrl !== formState.s3Url) {
+      setIsLoading(true);
       S3FileUpload.uploadFile(formState.image, config)
         .then((data) => {
-          setIsLoading(true);
           setFormState({ ...formState, s3Url: data.location });
           console.log(data);
           return data;
@@ -111,7 +151,10 @@ function AddPhoto() {
             }),
           })
         )
-        .then((res) => navigate('/dashboard'));
+        .then((res) => {
+          setIsLoading(false);
+          navigate('/dashboard');
+        });
     } else {
       fetch(patchUrl, {
         method: 'PATCH',
@@ -180,11 +223,15 @@ function AddPhoto() {
         </Typography>
         {formState.tempImgUrl && (
           <Box className='addPhoto'>
-            <img style={{ maxWidth: '300px' }} src={formState.tempImgUrl} />
+            <img
+              style={{ maxWidth: '300px' }}
+              src={formState.tempImgUrl}
+              id='tfImg'
+            />
 
             <Box
               component='div'
-              sx={{ display: 'flex', justifyContent: 'flex-end' }}
+              sx={{ display: 'flex', justifyContent: 'space-around' }}
             >
               <Button
                 onClick={() =>
@@ -192,6 +239,13 @@ function AddPhoto() {
                 }
               >
                 Remove
+              </Button>
+              <Button
+                onClick={handlePredict}
+                endIcon={<TagIcon />}
+                variant='outlined'
+              >
+                Generate tags
               </Button>
             </Box>
           </Box>
@@ -235,6 +289,7 @@ function AddPhoto() {
             }
           />
         </Box>
+        {tfClasses.length > 0 && <Typography>Add: {suggestions} </Typography>}
         <Box className='tags'>
           <TextField
             id='outlined-textarea'

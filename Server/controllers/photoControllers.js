@@ -23,7 +23,7 @@ photoControllers.getPhotosByTag = async (req, res, next) => {
   const { userId } = req.params;
 
   const { tags } = req.query;
-  console.log(tags);
+  console.log('Tags being sent back', tags);
   const queryString = `SELECT * FROM photos WHERE userid=($1) AND tags LIKE ($2)`;
   try {
     const taggedPhotos = await db.query(queryString, [userId, `%${tags}%`]);

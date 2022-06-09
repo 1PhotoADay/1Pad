@@ -1,12 +1,18 @@
 import React from 'react';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import TagIcon from '@mui/icons-material/Tag';
-import PersonIcon from '@mui/icons-material/Person';
+
+import { PersonIcon, ImageSearch } from '@mui/icons-material';
 import Paper from '@mui/material/Paper';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Link } from 'react-router-dom';
 
 function BottomNav() {
   const value = 0;
+  const handleClear = () => {
+    localStorage.clear();
+    console.log('Cookies are cleared!');
+  };
 
   return (
     <Paper
@@ -20,9 +26,15 @@ function BottomNav() {
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction icon={<PhotoCameraIcon />} />
-        <BottomNavigationAction icon={<TagIcon />} />
-        <BottomNavigationAction icon={<PersonIcon />} />
+        <Link to={`/dashboard`}>
+          <BottomNavigationAction icon={<PhotoCameraIcon />} />
+        </Link>
+        <Link to={`/search`}>
+          <BottomNavigationAction icon={<ImageSearch />} />
+        </Link>
+        <Link to={`/`} onClick={(e) => handleClear(e, 'Clear user cookies')}>
+          <BottomNavigationAction icon={<LogoutIcon />} />
+        </Link>
       </BottomNavigation>
     </Paper>
   );
