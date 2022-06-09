@@ -4,12 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "clean": "rm dist/bundle.js",
     "build-dev": "NODE_ENV=development webpack",
     "build-prod": "NODE_ENV=production webpack",
     "start": "NODE_ENV=production nodemon Server/server.js",
     "dev": "NODE_ENV=development nodemon Server/server.js & NODE_ENV=development webpack serve --mode development"
+  },
+  "jest": {
+    "globalSetup": "./jest-setup.js",
+    "globalTeardown": "./jest-teardown.js",
+    "testEnvironment": "jest-environment-jsdom",
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom/extend-expect"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -22,11 +30,18 @@
     "@mui/icons-material": "^5.8.2",
     "@mui/material": "^5.8.2",
     "@mui/x-date-pickers": "^5.0.0-alpha.5",
+    "@react-oauth/google": "^0.2.6",
+    "@tensorflow-models/coco-ssd": "^2.2.2",
+    "@tensorflow/tfjs": "^3.18.0",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
     "bcrypt": "^5.0.1",
     "buffer": "^6.0.3",
     "date-fns": "^2.28.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "jest": "^28.1.1",
+    "jest-environment-jsdom": "^28.1.1",
     "luxon": "^2.4.0",
     "mui-image": "^1.0.4",
     "pg": "^8.7.3",
@@ -50,6 +65,7 @@
     "style-loader": "^3.3.1",
     "webpack": "^5.73.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.9.2"
+    "webpack-dev-server": "^4.9.2",
+    "whatwg-fetch": "^3.6.2"
   }
 }

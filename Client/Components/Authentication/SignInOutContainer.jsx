@@ -7,6 +7,7 @@ import Box from '@material-ui/core/Box';
 import Login from './Login.jsx';
 import Signup from './Signup.jsx';
 import MainContainer from '../Main/MainContainer.jsx';
+import loginUser from '../../utils/loginUser';
 import { Link } from 'react-router-dom';
 import GoogleOAuth from './GoogleOAuth.jsx';
 
@@ -56,7 +57,11 @@ const SignInOutContainer = ({ setAccount, setToken }) => {
             <Tab label='Log In' />
           </Tabs>
           <TabPanel value={value} index={1}>
-            <Login setShowMain={setShowMain} setUserId={setUserId} />
+            <Login
+              setShowMain={setShowMain}
+              setUserId={setUserId}
+              loginUser={loginUser}
+            />
           </TabPanel>
           <TabPanel value={value} index={0}>
             <Signup setShowMain={setShowMain} setUserId={setUserId} />

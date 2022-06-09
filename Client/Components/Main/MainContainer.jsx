@@ -8,6 +8,7 @@ import {
   ImageListItemBar,
   IconButton,
   Container,
+  Typography,
   Box,
 } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -51,7 +52,7 @@ const handleClick = () => {
 
 const images = (data) => {
   return (
-    <ImageList sx={{ maxWidth: 800 }}>
+    <ImageList sx={{ maxWidth: 428, width: '100%' }}>
       <ImageListItem key='Subheader' cols={2}>
         {/* <ListSubheader component='div'>{date.month}</ListSubheader> */}
       </ImageListItem>
@@ -63,13 +64,13 @@ const images = (data) => {
               <img
                 src={day.img}
                 loading='lazy'
-                style={{ width: 300, height: 200 }}
+                style={{ width: '100%', height: 150 }}
               />
             ) : (
               <Box
                 sx={{
-                  width: 300,
-                  height: 200,
+                  width: '100%',
+                  height: 150,
                   backgroundColor: colorGen(),
                   display: 'flex',
                   justifyContent: 'center',
@@ -84,9 +85,16 @@ const images = (data) => {
             <ImageListItemBar
               sx={{
                 textAlign: 'end',
+                maxHeight: '30%',
               }}
               title={day.title}
-              subtitle={day.subtitle}
+              // subtitle={day.subtitle}
+              subtitle={
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Box component='span'>{day.tags}</Box>
+                  <Box component='span'>{day.subtitle}</Box>
+                </Box>
+              }
             />
           </ImageListItem>
         </Link>
@@ -111,14 +119,23 @@ function MainContainer() {
       });
   }, []);
   return (
-    <>
+    <div>
+      <Typography
+        variant='h1'
+        align='center'
+        padding={2.5}
+        margin={0.5}
+        fontSize={64}
+      >
+        Timeline
+      </Typography>
       <Container
         maxWidth='lg'
         sx={{ marginBottom: '56px', display: 'flex', justifyContent: 'center' }}
       >
         {data.length && images(data)}
       </Container>
-    </>
+    </div>
   );
 }
 

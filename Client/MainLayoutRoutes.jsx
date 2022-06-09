@@ -5,7 +5,6 @@ import MainContainer from './Components/Main/MainContainer';
 import Search from './Components/Main/Search';
 import AddPhoto from './Components/Main/AddPhoto';
 import Container from '@mui/material/Container';
-import EditPhoto from './Components/Main/EditPhoto';
 
 function MainLayoutRoutes() {
   return (
