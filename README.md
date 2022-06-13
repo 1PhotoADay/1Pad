@@ -45,11 +45,11 @@ To get a local copy up and running follow these simple steps.
 ```
   npm install
 ```
-3. Create a .env file in the root directory and paste in the following
+3. Create a `.env` file in the root directory and paste in the following
 ``` 
-  PG_URI=YOUR POSTGRESQL URL
+  PG_URI='YOUR POSTGRESQL URL'
 ```
-4. In the Client/utils directory/config.js, enter your own S3 config object
+4. In the Client/utils directory/config.js, enter your own S3 config object in the following format
 ``` javascript
 const S3config = {
   bucketName: '1pad',
