@@ -11,7 +11,7 @@
 ![Dashboard.gif](https://i.postimg.cc/j5r28ZnH/Dashboard.gif)
 
 ### Upload photo
-![Coffee-2x.gif](https://i.postimg.cc/VsDTL2Nh/Coffee-2x.gif)
+![Coffee-short.gif](https://i.ibb.co/fDK6xmb/Coffee-short.gif)
 
 ### Delete photo
 ![Delete.gif](https://i.postimg.cc/FHrHJY5Z/Delete.gif)
