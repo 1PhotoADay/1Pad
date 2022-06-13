@@ -26,7 +26,7 @@
 # Built With
 - [React.js](https://reactjs.org/)
 - [Material-UI](https://mui.com/)
-- [PostgreSQL])(https://www.postgresql.org/)
+- [PostgreSQL](https://www.postgresql.org/)
 - [Bcrypt](https://www.npmjs.com/package/bcrypt)
 - [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google)
 - [Node.js](https://nodejs.org/en/)
