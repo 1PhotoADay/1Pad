@@ -18,7 +18,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import TagIcon from '@mui/icons-material/Tag';
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
-import config from '../S3UploadComponent';
+import config from '../../utils/config';
 
 function AddPhoto() {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ function AddPhoto() {
   let date = location.state.date ? location.state.date : new Date();
   let s3Url = 'https://1pad.s3.amazonaws.com/samplePhoto.jpeg';
   let desc = '';
-  let tags = '#happy';
+  let tags = '';
   let photoId = null;
   let headline = 'Add a photo 📷';
 
