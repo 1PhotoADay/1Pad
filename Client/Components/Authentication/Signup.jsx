@@ -75,6 +75,7 @@ const Signup = ({ setUserId, setShowMain }) => {
                 <TextField
                   fullWidth
                   label='Password'
+                  type='password'
                   placeholder='Enter your password'
                   value={Password}
                   onChange={(event) => setPassword(event.target.value)}
