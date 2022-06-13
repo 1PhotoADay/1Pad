@@ -49,7 +49,7 @@ To get a local copy up and running follow these simple steps.
 ``` 
   PG_URI=YOUR POSTGRESQL URL
 ```
-4. In the Client/utils directory, create config.js and paste in the following
+4. In the Client/utils directory/config.js, enter your own S3 config object
 ``` javascript
 const S3config = {
   bucketName: '1pad',
